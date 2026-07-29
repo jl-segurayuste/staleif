@@ -1,0 +1,24 @@
+[project]
+name = "staleif"
+version = "0.1.0"
+description = "Encuentra bloques 'if sys.version_info < (X, Y)' que ya son codigo muerto porque el requires-python del proyecto ya no soporta versiones tan viejas -- con contexto de git blame de cuando se anadieron."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.6", "packaging>=23.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "ruff>=0.6"]
+
+[project.scripts]
+staleif = "staleif.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["staleif*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
