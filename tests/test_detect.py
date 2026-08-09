@@ -32,6 +32,33 @@ def test_detecta_subscript_indice_0():
     assert guards[0].threshold == (3,)
 
 
+def test_tupla_completa_sin_subindice_tiene_projection_none():
+    tree = ast.parse("import sys\nif sys.version_info < (3, 8):\n    pass\n")
+    guards = find_version_guards(tree)
+    assert guards[0].projection is None
+
+
+def test_subindice_0_tiene_projection_1():
+    # Bug real encontrado 2026-08-09: "sys.version_info[0]" solo mira el
+    # componente mayor, así que su `projection` debe ser 1 -- no None (tupla
+    # completa), o se compararía contra minor/micro que ese subíndice ni
+    # siquiera lee.
+    tree = ast.parse("import sys\nif sys.version_info[0] > 3:\n    pass\n")
+    guards = find_version_guards(tree)
+    assert guards[0].projection == 1
+
+
+def test_slice_hasta_2_tiene_projection_2():
+    tree = ast.parse("import sys\nif sys.version_info[:2] < (3, 6):\n    pass\n")
+    guards = find_version_guards(tree)
+    assert guards[0].projection == 2
+
+
+def test_subindice_con_variable_se_ignora():
+    tree = ast.parse("import sys\ni = 0\nif sys.version_info[i] < 3:\n    pass\n")
+    assert find_version_guards(tree) == []
+
+
 def test_detecta_presencia_de_else():
     tree = ast.parse("import sys\nif sys.version_info < (3, 8):\n    pass\nelse:\n    pass\n")
     guards = find_version_guards(tree)

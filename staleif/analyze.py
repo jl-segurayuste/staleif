@@ -42,7 +42,20 @@ def analyze_repo(repo_path: Path) -> list[Finding] | None:
 
         rel = str(path.relative_to(repo_path))
         for guard in find_version_guards(tree):
-            verdict = branch_verdict(guard.op_name, guard.threshold, min_version)
+            # Si la comparación real era contra un subíndice/slice (ej.
+            # "sys.version_info[0]"), solo esos componentes iniciales del suelo
+            # mínimo son relevantes -- comparar contra el resto (ej. el minor de
+            # un "requires-python >=3.8") produce un veredicto incorrecto. Si no
+            # hay suelo fiable para ese subíndice concreto (ej. "[2]" -- micro --
+            # cuando requires-python solo da mayor.menor), no se puede razonar
+            # con seguridad: se omite el guard en vez de adivinar.
+            if guard.projection is None:
+                effective_min_version = min_version
+            elif guard.projection <= len(min_version):
+                effective_min_version = min_version[: guard.projection]
+            else:
+                continue
+            verdict = branch_verdict(guard.op_name, guard.threshold, effective_min_version)
             if verdict == "live":
                 continue
             if verdict == "else_dead" and not guard.has_else:
