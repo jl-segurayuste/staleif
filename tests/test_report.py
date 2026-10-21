@@ -16,7 +16,7 @@ def test_to_console_con_hallazgos_sin_emojis():
             condition="sys.version_info < (3, 8)",
             detail="ya no aplica",
             commit="abc12345",
-            author="Jose",
+            author="dev@ejemplo-demo.es",
             summary="workaround viejo",
         )
     ]

@@ -11,7 +11,7 @@ $ staleif scan .
 [IF MUERTO] compat.py:12 -- sys.version_info < (3, 8)
            El proyecto ya requiere Python >= 3.11, así que esta condición
            nunca es verdadera -- la rama 'if' es inalcanzable.
-           Añadido en a1b2c3d4 por Jose: "workaround para python 3.7"
+           Añadido en a1b2c3d4 por dev@ejemplo-demo.es: "workaround para python 3.7"
 
 Total: 1 guarda(s) de versión muerta(s).
 ```
