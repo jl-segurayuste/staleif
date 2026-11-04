@@ -17,9 +17,11 @@ def min_python_version(requires_python: str) -> tuple[int, ...] | None:
 
     candidates: list[tuple[int, ...]] = []
     for spec in specifiers:
-        if spec.operator in (">=", ">"):
+        # "~=3.11" (>=3.11,<4) y "==3.11.*" también fijan el mínimo; antes se ignoraban y la
+        # herramienta decía que no había requires-python.
+        if spec.operator in (">=", ">", "~=") or (spec.operator == "==" and spec.version.endswith(".*")):
             try:
-                v = Version(spec.version)
+                v = Version(spec.version.removesuffix(".*"))
             except Exception:  # noqa: BLE001, S112 -- version rara en el specifier, se ignora
                 continue
             candidates.append(v.release[:2])

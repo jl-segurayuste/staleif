@@ -35,3 +35,11 @@ def test_project_min_python_version_sin_fichero(git_repo):
 def test_project_min_python_version_sin_requires_python(git_repo):
     write(git_repo, "pyproject.toml", '[project]\nname="x"\n')
     assert project_min_python_version(git_repo) is None
+
+
+def test_min_python_version_compatible_release():
+    assert min_python_version("~=3.11") == (3, 11)
+
+
+def test_min_python_version_comodin():
+    assert min_python_version("==3.11.*") == (3, 11)

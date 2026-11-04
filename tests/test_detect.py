@@ -79,3 +79,14 @@ def test_if_normal_no_se_detecta():
 def test_comparacion_con_variable_no_literal_se_ignora():
     tree = ast.parse("import sys\nlimite = (3, 8)\nif sys.version_info < limite:\n    pass\n")
     assert find_version_guards(tree) == []
+
+
+def test_atributo_major_equivale_a_indice_0():
+    tree = ast.parse("import sys\nif sys.version_info.major < 3:\n    pass\n")
+    guards = find_version_guards(tree)
+    assert len(guards) == 1 and guards[0].projection == 1 and guards[0].threshold == (3,)
+
+
+def test_atributo_minor_solo_se_omite():
+    tree = ast.parse("import sys\nif sys.version_info.minor < 8:\n    pass\n")
+    assert find_version_guards(tree) == []

@@ -8,6 +8,8 @@ _FLIP_OP = {"Lt": "Gt", "LtE": "GtE", "Gt": "Lt", "GtE": "LtE", "Eq": "Eq"}
 def _is_version_info_expr(node: ast.AST) -> bool:
     if isinstance(node, ast.Attribute) and node.attr == "version_info":
         return isinstance(node.value, ast.Name) and node.value.id == "sys"
+    if isinstance(node, ast.Attribute) and node.attr in ("major", "minor", "micro"):
+        return _is_version_info_expr(node.value)   # sys.version_info.major
     if isinstance(node, ast.Subscript):
         return _is_version_info_expr(node.value)
     return False
@@ -24,6 +26,10 @@ def _projection_from_node(node: ast.AST) -> int | None:
     adivinar -- ver el bug real de `sys.version_info[0] > 3` en el docstring del
     módulo."""
     if isinstance(node, ast.Attribute):
+        if node.attr == "major":
+            return 1     # como "[0]"
+        if node.attr in ("minor", "micro"):
+            return -1    # sin el mayor delante no dice nada fiable
         return None  # sys.version_info sin subíndice: tupla completa
     if not isinstance(node, ast.Subscript):
         return -1
