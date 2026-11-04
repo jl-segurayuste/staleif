@@ -15,7 +15,7 @@ _OP_SYMBOL = {"Lt": "<", "LtE": "<=", "Gt": ">", "GtE": ">="}
 
 def _tracked_python_files(repo_path: Path) -> list[Path] | None:
     result = subprocess.run(
-        ["git", "ls-files", "*.py"], cwd=repo_path, capture_output=True, text=True, check=False
+        ["git", "-c", "core.quotePath=false", "ls-files", "*.py"], cwd=repo_path, capture_output=True, text=True, check=False
     )
     if result.returncode != 0:
         return None
