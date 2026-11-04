@@ -16,6 +16,12 @@ $ staleif scan .
 Total: 1 guarda(s) de versión muerta(s).
 ```
 
+## Así se ve
+
+![Salida de staleif sobre un proyecto de ejemplo](docs/img/demo.svg)
+
+<sub>Ejecución real sobre una librería que ya exige Python 3.11 pero conserva guardas para 3.7 (todos los datos son ficticios).</sub>
+
 ## Por qué existe
 
 Los "workarounds" condicionados a la versión de Python son de los tipos de
