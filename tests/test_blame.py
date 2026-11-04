@@ -26,3 +26,11 @@ def test_blame_line_distingue_lineas_de_commits_distintos(git_repo):
     info2 = blame_line(git_repo, "mod.py", 2)
     assert info1["summary"] == "primero"
     assert info2["summary"] == "segundo"
+
+
+def test_blame_line_sin_commitear_no_inventa_autor(git_repo):
+    write(git_repo, "a.py", "x = 1\n")
+    commit_all(git_repo)
+    write(git_repo, "a.py", "x = 2\n")
+    assert blame_line(git_repo, "a.py", 1) is None
+

@@ -1,6 +1,6 @@
 [project]
 name = "staleif"
-version = "0.1.2"
+version = "0.1.3"
 description = "Encuentra bloques 'if sys.version_info < (X, Y)' que ya son codigo muerto porque el requires-python del proyecto ya no soporta versiones tan viejas -- con contexto de git blame de cuando se anadieron."
 readme = "README.md"
 license = { text = "MIT" }

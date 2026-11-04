@@ -15,6 +15,8 @@ def blame_line(repo_path: Path, relpath: str, lineno: int) -> dict[str, str] | N
     )
     if result.returncode != 0 or not result.stdout:
         return None
+    if set(result.stdout.split(maxsplit=1)[0]) == {"0"}:
+        return None  # línea sin commitear: git la atribuye a «Not Committed Yet»
 
     lines = result.stdout.splitlines()
     info: dict[str, str] = {"commit": lines[0].split()[0]}
